@@ -1,0 +1,3 @@
+[submodule "doc/bootDoc"]
+	path = doc/bootDoc
+	url = git://github.com/shdpl/nawia-ddoc.git

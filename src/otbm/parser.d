@@ -1,19 +1,7 @@
 /**
- * Copyright (C) 2012 Mariusz 'shd' Gliwiński.
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * Authors: Mariusz 'shd' Gliwiński.
+ * License: GNU Lesser General Public License
+ */
 module otbm.parser;
 
 public {
@@ -32,20 +20,47 @@ private {
 
 //struct OTBMParser
 //{
+/**
+ Version identifier type
+ */
 alias Tuple!(uint, "major", uint, "minor") Version;
 
-/// callbacks
+/**
+ Called after reading file header
+ */
 void delegate(in Version map, in ushort width, in ushort height, in Version items) onHeader;
 
+/**
+ Called with human-provided map description
+ */
 void delegate(in char[] description) onMapDescription;
+/**
+ Provides user with path to file containing spawn description.
+ */
 void delegate(in char[] spawn) onMapSpawnFile;
+/**
+ Provides user with path to file that describes houses.
+ */
 void delegate(in char[] houses) onMapHousesFile;
 
+/**
+ Called every time when parser will encounter town definition.
+ */
 void delegate(in Town) onTown;
+/**
+ Called every time when parser will encounter waypoint definition.
+ */
 void delegate(in Waypoint) onWaypoint;
 
+/**
+ Called for every map tile filled with data.
+ */
 void delegate(in Tile) onTile;
-/** BUG:OTBM-1 Tile, and parent here might not be fully filled with its data **/
+/**
+ Called every time, that parser encounters item definition
+ 
+ Bugs:OTBM-1 Tile, and parent here might not be fully filled with its data
+ */
 void delegate(in Tile, in Item, in Item* parent) onItem;
 //void delegate(in uint id, in ushort x, in ushort y, in ubyte z, uint flags, in ushort itemId) onHouseTile;
 
@@ -76,18 +91,29 @@ bool isSupported(Nullable!Version map, Nullable!Version item)
 	return true;
 }
 
+/**
+ Describes position on map
+ */
 struct Position
 {
+	/// 0 to max-width / max-height coordinate
 	ushort x, y;
+	/// 0 to 16 coordinate
 	ubyte z;
 }
 
+/**
+ Describes a Tile
+ */
 struct Tile
 {
 	Position pos;
 	uint flags;
 }
 
+/**
+ Describes an item on map
+ */
 struct Item
 {
 	uint id;
@@ -105,12 +131,18 @@ struct Item
 	ushort depot_id;
 }
 
+/**
+ Describes waypoint on map
+ */
 struct Waypoint
 {
 	string name;
 	Position pos;
 }
 
+/**
+ Describes town on map
+ */
 struct Town
 {
 	uint id;
@@ -120,6 +152,9 @@ struct Town
 
 
 
+/**
+ Describes group of item.
+ */
 enum ItemGroup : ubyte
 {
   NONE = 0,
@@ -175,6 +210,9 @@ enum ItemAttribute : ubyte
 };
 
 
+/**
+ Item type flags
+ */
 union ItemFlags
 {
 	uint f;
@@ -227,6 +265,9 @@ union ItemFlags
 	}
 }
 
+/**
+ Describes light source
+ */
 struct Light
 {
 	align(1)
@@ -239,6 +280,9 @@ struct Light
 	}
 }
 
+/**
+ Describes OTB format Version
+ */
 struct VersionInfo
 {
 	align(1)
@@ -247,8 +291,14 @@ struct VersionInfo
 	uint build;
 	char[128] csd;
 }
+/**
+ Informs user about OTB Version
+ */
 void delegate(VersionInfo) onOTBVersion;
 
+/**
+ Item type definition
+ */
 struct ItemType
 {
 	string name;
@@ -263,8 +313,14 @@ struct ItemType
 	ubyte[16] hash;
 	ushort miniMapColor;
 }
+/**
+ Informs user about item type definition
+ */
 void delegate(ItemType) onItemType;
 
+/**
+ Start to parse OTB file from stream (make sure you configured your callbacks before invocation)
+ */
 void parseOTB(Stream stream)
 {
 	enum RootAttrib : ubyte
@@ -385,7 +441,7 @@ void parseOTB(Stream stream)
 }
 
 /**
- * Tries to parse input file. During parsing, it calls every set callback methods.
+ Start to parse OTBM map file from stream (make sure you configured your callbacks before invocation)
  */
 void parse(Stream stream)
 {	

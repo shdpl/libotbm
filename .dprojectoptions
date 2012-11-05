@@ -1,0 +1,7 @@
+[compileoptions]
+buildtype = EXECUTABLE
+out = bin
+outname = otbt
+buildtool = make -C /home/shd/src/libotbm/build
+extraOptions = 
+

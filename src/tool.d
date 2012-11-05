@@ -14,7 +14,7 @@ int main(string[] args)
 {
 	if (args.length != 3)
 	{
-		return usage;
+		return usage(args[0]);
 	}
 	auto f = new BufferedFile();
 	f.open(args[2]);
@@ -35,21 +35,21 @@ int main(string[] args)
 			list(f, ft);
 		break;
 		default:
-			return usage;
+			return usage(args[0]);
 	}
 	return 0;
 }
 
-bool usage()
+bool usage(string executable)
 {
-	writeln( text(
-		"Usage: otbm command path/to/file.otb\n",
+	writeln(
+		"Usage: ",executable," command path/to/file.otb\n",
 		" supported commands",
 		"  chk ",
 //		"  ed ",
 //		"  rm ",
 		"  ls "
-	) );
+	);
 	return 1;
 }
 
