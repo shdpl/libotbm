@@ -1,2 +1,4 @@
 MODULES = 
 	$(MODULE otbm.parser)
+	$(MODULE otbm.otbm)
+	$(MODULE otbm.otb)

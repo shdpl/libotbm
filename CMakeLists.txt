@@ -21,5 +21,7 @@ include_directories ( "${CMAKE_SOURCE_DIR}/src" )
 SET( GLOBAL_DMD_DEFS "-gc -release -D -Dd${USER_DOCUMENT_OUTPUT_DIRECTORY} -H -Hd${USER_INCLUDE_OUTPUT_DIRECTORY}" )
 SET( CMAKE_D_FLAGS "${CMAKE_D_FLAGS} ${GLOBAL_DMD_DEFS}" )
 
-ADD_LIBRARY (otbm STATIC src/otbm/parser.d)
-ADD_EXECUTABLE (otbt src/otbm/parser.d src/tool.d)
+SET( PARSER_SOURCES src/otbm/otbm.d src/otbm/otb.d src/otbm/parser.d src/otbm/common.d )
+
+ADD_LIBRARY( otbm STATIC ${PARSER_SOURCES} )
+ADD_EXECUTABLE( otbt ${PARSER_SOURCES} src/tool.d )
