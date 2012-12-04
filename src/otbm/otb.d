@@ -232,7 +232,6 @@ extern (C)
 			}
 			for(stream.read(cb); cb != NODE_END; stream.read(cb) )
 			{
-				writeln(cb," ",stream.pos," ",data[0..0x10]);
 				ItemType it;
 				stream.read(cast(ubyte) it.group);
 				stream.read(it.flags.f);
@@ -287,7 +286,7 @@ extern (C)
 							stream.seekCur(size);
 						break;
 						default:
-							enforceEx!MapFormatBroken(false); 
+							enforceEx!MapFormatBroken(false);
 					}
 					stream.read(cb);
 				}

@@ -8,6 +8,10 @@ public {
 	import std.stdio : writeln;
 }
 
+immutable NODE_START	= 0xfe;
+immutable NODE_END		= 0xff;
+immutable NODE_ESCAPE	= 0xfd;
+
 struct Stream
 {
 	void[] *data;
@@ -20,19 +24,21 @@ struct Stream
 	
 	void peek(T)(out T type)
 	{
-		type = *cast(T*) (*data).ptr[pos..pos+type.sizeof];
+		peek_escaped(type);
 	}
 	void read(T)(out T type)
 	{
 		assert(pos+type.sizeof <= data.length);
-		peek(type);
-		pos += type.sizeof;
+		pos += peek_escaped(type);
 	}
 	string readString(size_t length)
 	{
 		assert(pos+length <= data.length);
-		pos +=length;
-		return to!string((*data).ptr[pos-length..pos]);
+		auto tmp = new char[length+1]; //FIXME: get rid of allocation
+		tmp[$-1] = 0;
+		auto delta = peek_escaped_byte(cast(ubyte*)tmp, length);
+		pos += delta;
+		return to!string(tmp);
 	}
 	bool end()
 	{
@@ -40,11 +46,26 @@ struct Stream
 	}
 	void seekCur(size_t offset)
 	{
-		assert(pos+offset <= data.length);
+		assert(pos+offset <= data.length && pos+offset >= 0);
+		pos += offset;
 	}
 	private:
-	T read_escaped(T)(size_t length)
+	size_t peek_escaped(T)(out T type)
 	{
-		//TODO
+		return peek_escaped_byte(cast(ubyte*) &type, type.sizeof);
+	}
+	size_t peek_escaped_byte(ubyte* t, size_t len)
+	{
+		size_t skipped = 0;
+		for(size_t i = 0; i < len+skipped; i++)
+		{
+			if( *(cast(ubyte*) (*data).ptr+pos+i) == NODE_ESCAPE )
+			{
+					skipped++;
+					i++;
+			}
+			t[i-skipped] = *(cast(ubyte*) (*data).ptr+pos+i);
+		}
+		return len+skipped;
 	}
 }

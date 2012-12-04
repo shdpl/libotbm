@@ -54,10 +54,6 @@ bool isSupported(Nullable!Version map, Nullable!Version item)
 	return true;
 }
 
-immutable NODE_START	= 0xfe;
-immutable NODE_END		= 0xff;
-immutable NODE_ESCAPE	= 0xfd;
-
 public:
 // Exceptions
 class ExceptionOTBM : Exception
