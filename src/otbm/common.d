@@ -8,9 +8,14 @@ public {
 	import std.stdio : writeln;
 }
 
-immutable NODE_START	= 0xfe;
-immutable NODE_END		= 0xff;
-immutable NODE_ESCAPE	= 0xfd;
+private {
+	import std.conv : text;
+	import std.process : system;
+}
+
+immutable ubyte NODE_START	= 0xfe;
+immutable ubyte NODE_END	= 0xff;
+immutable ubyte NODE_ESCAPE	= 0xfd;
 
 struct Stream
 {
@@ -22,9 +27,9 @@ struct Stream
 		this.data = &data;
 	}
 	
-	void peek(T)(out T type)
+	auto peek(T)(out T type)
 	{
-		peek_escaped(type);
+		return peek_escaped(type);
 	}
 	void read(T)(out T type)
 	{
@@ -48,6 +53,15 @@ struct Stream
 	{
 		assert(pos+offset <= data.length && pos+offset >= 0);
 		pos += offset;
+	}
+			
+	auto doDebug(uint lines = 6)
+	{
+		auto cmd = text(
+				"hexdump -C /home/shd/src/nawia-data/src/data/world/forgotten.otbm -s "
+				,pos > 16 ? pos-16 : pos
+				," | head -n",lines);
+		system(cmd);
 	}
 	private:
 	size_t peek_escaped(T)(out T type)

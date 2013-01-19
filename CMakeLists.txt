@@ -18,7 +18,7 @@ EXEC_PROGRAM( rdmd ${CMAKE_SOURCE_DIR}/doc ARGS ${CMAKE_SOURCE_DIR}/doc/bootDoc/
 
 include_directories ( "${CMAKE_SOURCE_DIR}/src" )
 
-SET( GLOBAL_DMD_DEFS "-gc -release -D -Dd${USER_DOCUMENT_OUTPUT_DIRECTORY} -H -Hd${USER_INCLUDE_OUTPUT_DIRECTORY}" )
+SET( GLOBAL_DMD_DEFS "-O -inline -gc -release -D -Dd${USER_DOCUMENT_OUTPUT_DIRECTORY} -H -Hd${USER_INCLUDE_OUTPUT_DIRECTORY}" )
 SET( CMAKE_D_FLAGS "${CMAKE_D_FLAGS} ${GLOBAL_DMD_DEFS}" )
 
 SET( PARSER_SOURCES src/otbm/otbm.d src/otbm/otb.d src/otbm/parser.d src/otbm/common.d )
