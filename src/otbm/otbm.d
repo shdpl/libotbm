@@ -5,7 +5,9 @@ public {
 }
 private {
 	import std.string;
+	import std.conv : text;
 	import otbm.common;
+	import std.datetime.stopwatch : benchmark;
 }
 debug
 {
@@ -193,10 +195,10 @@ extern(C)
 			
 			Version vOtbm;
 			otbm.read(vOtbm.major);
-			enforceEx!OTBMVersionNotSupported(isSupported(vOtbm), text("version=",vOtbm));
+			enforce!OTBMVersionNotSupported(isSupported(vOtbm), text("version=",vOtbm));
 			
-			import std.datetime;
-			writeln( benchmark!({ required!(NodeType.ROOT, parseOTBM)(otbm); })(1)[0].to!("msecs",float) );
+			import std.datetime : benchmark;
+			writeln( benchmark!({ required!(NodeType.ROOT, parseOTBM)(otbm); })(1)[0].msecs );
 		}
 		private:
 		string readStr(ref Stream buffer)
@@ -244,7 +246,7 @@ extern(C)
 			
 			Nullable!Version map = Version(ver, 0);
 			Nullable!Version items = Version(itemsVerMajor, itemsVerMinor);
-			enforceEx!MapVersionNotSupported(isSupported(map, items));
+			enforce!MapVersionNotSupported(isSupported(map, items));
 			
 			if (onHeader !is null)
 				onHeader(map, width, height, items);
@@ -311,7 +313,7 @@ extern(C)
 			buffer.read(x);
 			buffer.read(y);
 			buffer.read(z);
-			enforceEx!MapFormatBroken(z < 16);
+			enforce!MapFormatBroken(z < 16);
 			
 			auto cont = true;
 			while ( cont )
@@ -410,7 +412,7 @@ extern(C)
 			{
 				validFlags |= TileState.REFRESH;
 			}
-//			enforceEx!MapFormatBroken(validFlags == flags);
+//			enforce!MapFormatBroken(validFlags == flags);
 		}
 		void parseTile(ref Stream buffer, ushort x, ushort y, ubyte z)
 		{
@@ -443,10 +445,10 @@ extern(C)
 		{
 			ubyte cb;
 			otbm.read(cb);
-			enforceEx!MapFormatBroken(cb == NODE_START);
+			enforce!MapFormatBroken(cb == NODE_START);
 			
 			otbm.read(cb);
-			enforceEx!MapFormatBroken(cb == nt);
+			enforce!MapFormatBroken(cb == nt);
 			
 			debug
 			{
@@ -455,13 +457,13 @@ extern(C)
 			func(otbm, args);
 			
 			otbm.read(cb);
-			enforceEx!MapFormatBroken(cb == NODE_END);
+			enforce!MapFormatBroken(cb == NODE_END);
 		}
 		void required(DataType dt, alias func, A...)(ref Stream otbm, A args)
 		{
 			ubyte cb;
 			otbm.read(cb);
-			enforceEx!MapFormatBroken(cb == dt);
+			enforce!MapFormatBroken(cb == dt);
 			
 			debug
 			{
@@ -496,7 +498,7 @@ extern(C)
 			func(otbm, args);
 			
 			otbm.read(cb);
-			enforceEx!MapFormatBroken(cb == NODE_END);
+			enforce!MapFormatBroken(cb == NODE_END);
 			return true;
 		}
 		bool optional(DataType dt, alias func, A...)(ref Stream otbm, A args)

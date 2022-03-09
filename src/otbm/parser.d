@@ -10,7 +10,7 @@ public {
 private {
 	import std.conv : text;
 //	import std.variant;
-	import std.exception : Exception;
+	import object : Exception;
 }
 
 alias Tuple!(uint, "major", uint, "minor") Version;

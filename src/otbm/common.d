@@ -4,13 +4,13 @@ public {
 	import std.conv : to;
 	import std.array;
 	import std.algorithm;
-	import std.exception : enforceEx;
+	import std.exception : enforce;
 	import std.stdio : writeln;
 }
 
 private {
 	import std.conv : text;
-	import std.process : system;
+	import std.process : executeShell;
 }
 
 immutable ubyte NODE_START	= 0xfe;
@@ -39,8 +39,7 @@ struct Stream
 	string readString(size_t length)
 	{
 		assert(pos+length <= data.length);
-		auto tmp = new char[length+1]; //FIXME: get rid of allocation
-		tmp[$-1] = 0;
+		auto tmp = new char[length]; //FIXME: get rid of allocation
 		auto delta = peek_escaped_byte(cast(ubyte*)tmp, length);
 		pos += delta;
 		return to!string(tmp);
@@ -58,10 +57,11 @@ struct Stream
 	auto doDebug(uint lines = 6)
 	{
 		auto cmd = text(
-				"hexdump -C /home/shd/src/nawia-data/src/data/world/forgotten.otbm -s "
+				"hexdump -C /home/shd/nawia/windows/nawia-content/src/data/items/items.otb -s "
 				,pos > 16 ? pos-16 : pos
 				," | head -n",lines);
-		system(cmd);
+		auto stdout = executeShell(cmd);
+		writeln(stdout);
 	}
 	private:
 	size_t peek_escaped(T)(out T type)

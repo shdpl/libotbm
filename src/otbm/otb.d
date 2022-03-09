@@ -8,6 +8,7 @@ private {
 	import std.bitmanip;
 	
 	import otbm.common;
+	import std.conv : text;
 }
 
 extern (C)
@@ -195,9 +196,9 @@ extern (C)
 			RootAttrib ra;
 			VersionGeneral vOtb;
 			stream.read(vOtb.major);
-			enforceEx!OTBMVersionNotSupported(isSupported(vOtb), text("version=",vOtb));
+			enforce!OTBMVersionNotSupported(isSupported(vOtb), text("version=",vOtb));
 			stream.read(cb);
-			enforceEx!MapFormatBroken(cb == NODE_START);
+			enforce!MapFormatBroken(cb == NODE_START);
 			stream.read(cb);
 			switch(cb)
 			{
@@ -211,24 +212,24 @@ extern (C)
 							immutable GENERIC_OTB = 0xffffffff;
 							DataSize ds;
 							stream.read(ds);
-							enforceEx!MapFormatBroken(ds == VersionInfo.sizeof);
+							enforce!MapFormatBroken(ds == VersionInfo.sizeof);
 							VersionInfo vi;
 							stream.read(vi.otb_version);
 							stream.read(vi.client_version);
 							stream.read(vi.build);
 							stream.readString(128);
-							enforceEx!MapVersionNotSupported(vi.otb_version == GENERIC_OTB || vi.otb_version == 3);
+							enforce!MapVersionNotSupported(vi.otb_version == GENERIC_OTB || vi.otb_version == 3);
 							if (onOTBVersion !is null)
 							{
 								onOTBVersion(vi);
 							}
 						break;
 						default:
-							enforceEx!MapFormatBroken(false);
+							enforce!MapFormatBroken(false);
 					}
 				break;
 				default:
-					enforceEx!MapFormatBroken(false);
+					enforce!MapFormatBroken(false);
 			}
 			for(stream.read(cb); cb != NODE_END; stream.read(cb) )
 			{
@@ -244,39 +245,39 @@ extern (C)
 					switch(cb)
 					{
 						case ItemAttribute.ServerId:
-							enforceEx!MapFormatBroken(size == it.serverId.sizeof);
+							enforce!MapFormatBroken(size == it.serverId.sizeof);
 							stream.read(it.serverId);
 						break;
 						case ItemAttribute.ClientId:
-							enforceEx!MapFormatBroken(size == it.clientId.sizeof);
+							enforce!MapFormatBroken(size == it.clientId.sizeof);
 							stream.read(it.clientId);
 						break;
 						case ItemAttribute.Speed:
-							enforceEx!MapFormatBroken(size == it.speed.sizeof);
+							enforce!MapFormatBroken(size == it.speed.sizeof);
 							stream.read(it.speed);
 						break;
 						case ItemAttribute.Light2:
-							enforceEx!MapFormatBroken(size == it.light2.sizeof);
+							enforce!MapFormatBroken(size == it.light2.sizeof);
 							stream.read(it.light2.level);
 							stream.read(it.light2.color);
 						break;
 						case ItemAttribute.TopOrder:
-							enforceEx!MapFormatBroken(size == it.topOrder.sizeof);
+							enforce!MapFormatBroken(size == it.topOrder.sizeof);
 							stream.read(it.topOrder);
 						break;
 						case ItemAttribute.WareId:
-							enforceEx!MapFormatBroken(size == it.wareId.sizeof);
+							enforce!MapFormatBroken(size == it.wareId.sizeof);
 							stream.read(it.wareId);
 						break;
 						case ItemAttribute.Name:
 							it.name = stream.readString(size);
 						break;
 						case ItemAttribute.SpriteHash:
-							enforceEx!MapFormatBroken(size == it.hash.sizeof);
+							enforce!MapFormatBroken(size == it.hash.sizeof);
 							stream.read(it.hash);
 						break;
 						case ItemAttribute.MiniMapColor:
-							enforceEx!MapFormatBroken(size == it.miniMapColor.sizeof);
+							enforce!MapFormatBroken(size == it.miniMapColor.sizeof);
 							stream.read(it.miniMapColor);
 						break;
 						case ItemAttribute.Attribute07:
@@ -286,7 +287,7 @@ extern (C)
 							stream.seekCur(size);
 						break;
 						default:
-							enforceEx!MapFormatBroken(false);
+							enforce!MapFormatBroken(false);
 					}
 					stream.read(cb);
 				}
@@ -295,7 +296,7 @@ extern (C)
 					onItemType(it);
 				}
 			}
-			enforceEx!MapFormatBroken(stream.end);
+			enforce!MapFormatBroken(stream.end);
 		}
 	}
 }

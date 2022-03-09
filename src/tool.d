@@ -1,3 +1,4 @@
+import std.conv : text;
 import std.file : read;
 import std.stdio : writeln;
 import std.array;
