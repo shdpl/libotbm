@@ -43,12 +43,12 @@ bool isSupported(Nullable!Version map, Nullable!Version item)
 {
 	if (!map.isNull)
 	{
-		if (map.major <= 0 || map.major > 2)
+		if (map.get.major <= 0 || map.get.major > 2)
 			return false;
 	}
 	if (!item.isNull)
 	{
-		if (item.major < 3 || item.minor < 8 || item.minor == 16)
+		if (item.get.major < 3 || item.get.minor < 8 || item.get.minor == 16)
 			return false;
 	}
 	return true;

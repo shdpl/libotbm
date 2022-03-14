@@ -7,7 +7,6 @@ private {
 	import std.string;
 	import std.conv : text;
 	import otbm.common;
-	import std.datetime.stopwatch : benchmark;
 }
 debug
 {
@@ -146,7 +145,7 @@ extern(C)
 		/**
 		 Called after reading file header
 		 */
-		void function(in Version map, in ushort width, in ushort height, in Version items) onHeader;
+		void function(in Nullable!Version map, in ushort width, in ushort height, in Nullable!Version items) onHeader;
 		
 		/**
 		 Called with human-provided map description
@@ -197,8 +196,7 @@ extern(C)
 			otbm.read(vOtbm.major);
 			enforce!OTBMVersionNotSupported(isSupported(vOtbm), text("version=",vOtbm));
 			
-			import std.datetime : benchmark;
-			writeln( benchmark!({ required!(NodeType.ROOT, parseOTBM)(otbm); })(1)[0].msecs );
+			required!(NodeType.ROOT, parseOTBM)(otbm);
 		}
 		private:
 		string readStr(ref Stream buffer)

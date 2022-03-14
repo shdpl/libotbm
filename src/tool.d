@@ -2,6 +2,7 @@ import std.conv : text;
 import std.file : read;
 import std.stdio : writeln;
 import std.array;
+import std.conv : text;
 
 import otbm.otbm;
 import otbm.otb;

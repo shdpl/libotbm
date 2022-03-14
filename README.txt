@@ -1,5 +1,5 @@
 Prerequisities:
-* dmd v2.095 compiler
+* dmd v2.097.2 compiler
 * cmake
 * cmaked2
 
