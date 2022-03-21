@@ -91,4 +91,4 @@ typedef struct parserOTB {
 	void (*onOTBVersion) (VersionInfo);
 } ParserOTB;
 
-void parse (ParserOTB parser, size_t len, void* data);
+void parseOTB(ParserOTB parser, size_t len, void* data);

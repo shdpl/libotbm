@@ -137,6 +137,9 @@ extern(C)
 	
 	public:
 	
+	void parseOTBM(ParserOTBM parser, size_t len, void* data) {
+		parser.parse(data[0..len]);
+	}
 	/**
 	 OTBM file format parser instance
 	 */

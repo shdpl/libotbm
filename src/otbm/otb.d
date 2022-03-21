@@ -165,6 +165,9 @@ extern (C)
 	  Writeable3,
 	  WareId,
 	};
+	void parseOTB(ParserOTB parser, size_t len, void* data) {
+		parser.parse(data[0..len]);
+	}
 	/**
 	 OTB file format parser instance
 	 */
