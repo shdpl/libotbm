@@ -86,9 +86,12 @@ typedef struct versionInfo
     char csd[128LLU];
 } VersionInfo;
 
+typedef void (*onItemType) (ItemType);
+typedef void (*onOTBVersion) (VersionInfo);
+
 typedef struct parserOTB {
-	void (*onItemType) (ItemType);
-	void (*onOTBVersion) (VersionInfo);
+	onItemType onItemType;
+	onOTBVersion onOTBVersion;
 } ParserOTB;
 
 void parseOTB(ParserOTB parser, size_t len, void* data);
