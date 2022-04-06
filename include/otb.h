@@ -1,10 +1,10 @@
 #include <stddef.h>
 #include <stdint.h>
 
-typedef struct tmp {
+typedef struct otbString {
     size_t length;
     char *ptr;
-} Tmp;
+} otbString_t;
 
 enum
 {
@@ -64,7 +64,7 @@ typedef struct
 } Light;
 
 typedef struct itemType {
-	Tmp name;
+	otbString_t name;
 	ItemGroup group;
 	ItemFlags flags;
 	uint16_t serverId;
@@ -86,12 +86,12 @@ typedef struct versionInfo
     char csd[128LLU];
 } VersionInfo;
 
-typedef void (*onItemType) (ItemType);
-typedef void (*onOTBVersion) (VersionInfo);
+typedef void (*OnItemType) (ItemType);
+typedef void (*OnOTBVersion) (VersionInfo);
 
 typedef struct parserOTB {
-	onItemType onItemType;
-	onOTBVersion onOTBVersion;
+	OnItemType onItemType;
+	OnOTBVersion onOTBVersion;
 } ParserOTB;
 
 void parseOTB(ParserOTB parser, size_t len, void* data);
