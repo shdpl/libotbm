@@ -34,6 +34,15 @@ extern(C)
 		Position pos;
 		uint flags;
 	}
+
+	/*
+		 Describes a Tile in the House
+	 */
+	struct HouseTile
+	{
+		uint house_id;
+		Tile tile;
+	}
 	
 	/**
 	 Describes an item on map
@@ -283,24 +292,25 @@ extern(C)
 		}
 		void parseHouseTile(ref Stream buffer, ushort x, ushort y, ubyte z)
 		{
-			uint house_id;
 			ubyte curByte, type, dx, dy;
-			Tile t;
+			HouseTile t;
 			
-			buffer.read(dx); t.pos.x = to!ushort(x+dx);
-			buffer.read(dy); t.pos.y = to!ushort(y+dy);
-			t.pos.z = z;
+			buffer.read(dx); t.tile.pos.x = to!ushort(x+dx);
+			buffer.read(dy); t.tile.pos.y = to!ushort(y+dy);
+			t.tile.pos.z = z;
 			
-			buffer.read(house_id);
+			buffer.read(t.house_id);
+
+			//TODO: onHouseTile
 			
 			bool cont = true;
 			while( cont )
 			{
 				// Tuples cannot be nested, so make it manual
 				cont = false;
-				cont |= optional!(DataType.ITEM, parseItem)(buffer,&t);
-				cont |= optional!(DataType.TILE_FLAGS, readFlags)(buffer, t.flags);
-				cont |= optional!(NodeType.ITEM, parseItem)(buffer,&t);
+				cont |= optional!(DataType.ITEM, parseItem)(buffer,&t.tile);
+				cont |= optional!(DataType.TILE_FLAGS, readFlags)(buffer, t.tile.flags);
+				cont |= optional!(NodeType.ITEM, parseItem)(buffer,&t.tile);
 			}
 			//0006907e
 		}
